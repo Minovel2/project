@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
-#include <windows.h>
 using namespace std;
 int counter;
 double* P3 = new double[45] { 22, 23, 24, 24, 25, 25, 26, 27, 27, 27, 27, 29, 29, 30, 31, 38, 39, 41, 41, 42, 43, 43, 44, 44, 44, 45, 46, 47, 48, 49, 43, 45, 45, 46, 47, 48, 49, 49, 50, 51, 51, 53, 53, 53, 54 };
@@ -131,27 +130,40 @@ double* clusterisation() {
     return pointsCounter;
 }
 
-int main()
-{
-    setlocale(LC_ALL, "rus");
-    SetConsoleCP(1251);
-    srand(time(0));
-    
-    bool cycle = true;
-    const int cyclesCount = 10000;
-    double middleSko;
-    while (cycle) {
-        middleSko = 0;
-        cout << "0 - прервать цикл, 1 - сгенерировать: ";
-        cin >> cycle;
-        if (cycle) {
+double getMiddleSko(int cyclesCount) {
+  double middleSko = 0;
             for (int i = 0; i < cyclesCount; i++) {
                 double* pointsCounter = clusterisation();
                 double sko = std::sqrt((std::pow(pointsCounter[0] - 15, 2) + std::pow(pointsCounter[1] - 15, 2) + std::pow(pointsCounter[2] - 15, 2)) / 3);
                 middleSko += (sko / cyclesCount);
             }
-            cout << "Количество циклов: " << cyclesCount;
-            cout << endl << "Среднее СКО = " << middleSko << endl << endl;
-        }
-    }
+        return middleSko;
+}
+
+void printSko(int cyclesCount) {
+  cout << "Количество циклов: " << cyclesCount << endl;
+    PX = P3;
+    PY = P4;
+    cout << "СКО для признаков 3 и 4: " << getMiddleSko(cyclesCount) << endl;
+    PY = P7;
+    cout << "СКО для признаков 3 и 7: " << getMiddleSko(cyclesCount) << endl;
+    PY = P8;
+    cout << "СКО для признаков 3 и 8: " << getMiddleSko(cyclesCount) << endl;
+    PX = P4;
+    PY = P7;
+    cout << "СКО для признаков 4 и 7: " << getMiddleSko(cyclesCount) << endl;
+    PY = P8;
+    cout << "СКО для признаков 4 и 8: " << getMiddleSko(cyclesCount) << endl;
+    PX = P7;
+    cout << "СКО для признаков 7 и 8: " << getMiddleSko(cyclesCount) << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "rus");
+    
+    srand(time(0));
+    printSko(1000);
+    cout << endl;
+    printSko(10000);
 }
